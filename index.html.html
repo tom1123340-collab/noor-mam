@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix of Love - Noor Mam</title>
+    <style>
+        :root {
+            --neon-pink: #ff2a6d;
+            --neon-red: #ff0055;
+            --glow-pink: rgba(255, 42, 109, 0.4);
+            --bg-dark: #05000a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background: #000;
+            overflow: hidden;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* --- Romantic Glitch Countdown --- */
+        #love-countdown {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            background: var(--bg-dark);
+            transition: opacity 0.5s ease;
+        }
+
+        .countdown-number {
+            font-size: 13rem;
+            font-weight: 900;
+            color: var(--neon-pink);
+            text-shadow: 0 0 30px var(--neon-pink), 0 0 60px var(--neon-red);
+            position: relative;
+            font-family: monospace;
+        }
+
+        .countdown-number::before, .countdown-number::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark);
+        }
+
+        .countdown-number::before {
+            left: 4px; text-shadow: -2px 0 #00ffff;
+            clip: rect(30px, 999px, 75px, 0);
+            animation: heart-glitch 0.4s infinite linear alternate-reverse;
+        }
+
+        @keyframes heart-glitch {
+            0% { clip: rect(10px, 9999px, 85px, 0); }
+            100% { clip: rect(60px, 9999px, 120px, 0); }
+        }
+
+        /* --- Main Graphics Canvas --- */
+        canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* --- Premium Centerpiece Design --- */
+        #love-display-panel {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.85);
+            transition: all 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        #love-display-panel.activate {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .heart-wrapper {
+            position: relative;
+            width: 580px;
+            height: 580px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Neo-Glow Romantic SVG Heart */
+        .svg-neon-heart {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: var(--neon-pink);
+            stroke-width: 2;
+            filter: drop-shadow(0 0 30px var(--neon-red));
+            stroke-dasharray: 1500;
+            stroke-dashoffset: 1500;
+        }
+
+        .activate .svg-neon-heart {
+            animation: drawLoveHeart 5s ease-in-out forwards;
+        }
+
+        @keyframes drawLoveHeart {
+            to {
+                stroke-dashoffset: 0;
+                fill: rgba(25, 2, 10, 0.55);
+            }
+        }
+
+        /* Luxury Glassmorphic Text Card */
+        .glass-card {
+            position: relative;
+            z-index: 20;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 42, 109, 0.25);
+            padding: 45px 35px;
+            border-radius: 30px;
+            box-shadow: inset 0 0 40px rgba(255, 0, 85, 0.15), 0 15px 35px rgba(0,0,0,0.5);
+            max-width: 85%;
+        }
+
+        .sub-tag {
+            color: #ffb6c1;
+            font-size: 0.85rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .birthday-text {
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            line-height: 1.3;
+            text-shadow: 0 0 15px rgba(255,255,255,0.6);
+        }
+
+        .name-highlight {
+            display: block;
+            margin-top: 15px;
+            font-size: 3.2rem;
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(45deg, #ff2a6d, #ff79da, #ff0055);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: beautifulGlow 2.5s infinite ease-in-out alternate;
+        }
+
+        @keyframes beautifulGlow {
+            0% { filter: drop-shadow(0 0 10px var(--neon-pink)); }
+            100% { filter: drop-shadow(0 0 35px #ff79da) drop-shadow(0 0 10px #fff); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="love-countdown">
+        <div class="countdown-number" id="countdown-node" data-text="3">3</div>
+    </div>
+
+    <canvas id="loveMatrixCanvas"></canvas>
+
+    <div id="love-display-panel">
+        <div class="heart-wrapper">
+            <svg class="svg-neon-heart" viewBox="0 0 32 29.6">
+                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+                c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+            </svg>
+            
+            <div class="glass-card">
+                <div class="sub-tag">💝 CORE_SYSTEM_HEART // ACTIVATED</div>
+                <h1 class="birthday-text">
+                    HAPPY BIRTHDAY
+                    <span class="name-highlight">NOOR MAM</span>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('loveMatrixCanvas');
+        const ctx = canvas.getContext('2d');
+        const countdownNode = document.getElementById('countdown-node');
+        const countdownOverlay = document.getElementById('love-countdown');
+        const mainPanel = document.getElementById('love-display-panel');
+
+        function setResolution() {
+            canvas.width = window.innerWidth * window.devicePixelRatio;
+            canvas.height = window.innerHeight * window.devicePixelRatio;
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+        setResolution();
+        window.addEventListener('resize', setResolution);
+
+        // Character array full of love codes, letters, and heart matrices
+        const lovePool = ["❤", "💖", "♥", "L", "O", "V", "E", "N", "O", "O", "R", "1", "0", "✨", "💕"];
+        let phase = 'countdown'; 
+        let fireworkList = [];
+
+        // 1. Timed Smooth Countdown Engine
+        let counter = 3;
+        const interval = setInterval(() => {
+            counter--;
+            if (counter > 0) {
+                countdownNode.innerText = counter;
+                countdownNode.setAttribute('data-text', counter);
+            } else {
+                clearInterval(interval);
+                countdownOverlay.style.opacity = '0';
+                phase = 'blackout';
+                
+                setTimeout(() => {
+                    countdownOverlay.style.display = 'none';
+                    triggerLoveFireworks();
+                }, 500); // 0.5s pitch black pure silence moment
+            }
+        }, 1000);
+
+        // 2. High-Density Custom Love Fireworks
+        class LoveParticle {
+            constructor(x, y, angle, magnitude) {
+                this.x = x;
+                this.y = y;
+                this.vx = Math.cos(angle) * magnitude;
+                this.vy = Math.sin(angle) * magnitude;
+                this.symbol = lovePool[Math.floor(Math.random() * lovePool.length)];
+                this.alpha = 1;
+                this.decay = Math.random() * 0.012 + 0.008;
+                this.gravity = 0.07;
+                // Alternate between rich pinks and shiny whites for beautiful depth
+                this.color = Math.random() > 0.4 ? '#ff2a6d' : '#ffffff';
+            }
+            update() {
+                this.vx *= 0.95;
+                this.vy *= 0.95;
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= this.decay;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.font = "bold 18px Arial";
+                ctx.shadowColor = '#ff0055';
+                ctx.shadowBlur = 12;
+                ctx.fillStyle = this.color;
+                ctx.fillText(this.symbol, this.x, this.y);
+                ctx.restore();
+            }
+        }
+
+        function createBlast() {
+            const burstX = Math.random() * window.innerWidth;
+            const burstY = Math.random() * (window.innerHeight * 0.4) + window.innerHeight * 0.15;
+            const size = 60; // Beautiful rich particle density
+
+            for (let i = 0; i < size; i++) {
+                const angle = (i / size) * Math.PI * 2;
+                const magnitude = Math.random() * 6 + 2;
+                fireworkList.push(new LoveParticle(burstX, burstY, angle, magnitude));
+            }
+        }
+
+        let fireworkTimer;
+        function triggerLoveFireworks() {
+            phase = 'fireworks';
+            fireworkTimer = setInterval(createBlast, 380);
+
+            setTimeout(() => {
+                clearInterval(fireworkTimer);
+                phase = 'lovelyRain';
+                mainPanel.classList.add('activate');
+            }, 5000); // Exact 5 seconds burst window
+        }
+
+        // 3. Matrix Love Rain System Parameters
+        const matrixFontSize = 16;
+        const matrixColumns = Math.floor(window.innerWidth / matrixFontSize) + 1;
+        const fallStreams = Array(matrixColumns).fill(0).map(() => Math.random() * -80);
+
+        // 4. Master Engine Loop
+        function loop() {
+            if (phase === 'blackout') {
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+            }
+            else if (phase === 'fireworks') {
+                ctx.fillStyle = 'rgba(5, 0, 10, 0.15)'; // Velvet trailing fade
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+                for (let i = fireworkList.length - 1; i >= 0; i--) {
+                    fireworkList[i].update();
+                    if (fireworkList[i].alpha <= 0) {
+                        fireworkList.splice(i, 1);
+                    } else {
+                        fireworkList[i].draw();
+                    }
+                }
+            }
+            else if (phase === 'lovelyRain') {
+                ctx.fillStyle = 'rgba(5, 0, 10, 0.06)'; // Premium smooth fade
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+                ctx.font = `bold ${matrixFontSize}px monospace`;
+
+                for (let i = 0; i < fallStreams.length; i++) {
+                    const character = lovePool[Math.floor(Math.random() * lovePool.length)];
+                    const xPosition = i * matrixFontSize;
+                    const yPosition = fallStreams[i] * matrixFontSize;
+
+                    // Neon layering and color assigning
+                    if (character === "❤" || character === "💖" || character === "💕") {
+                        ctx.fillStyle = '#ff0055'; // Vibrant pink/red for pure heart shapes
+                    } else if (Math.random() > 0.96) {
+                        ctx.fillStyle = '#ffffff'; // Occasional glowing white tip
+                    } else {
+                        ctx.fillStyle = '#ff2a6d'; // Main sweet digital rain color
+                    }
+
+                    ctx.shadowColor = 'rgba(255, 42, 109, 0.5)';
+                    ctx.shadowBlur = 6;
+                    ctx.fillText(character, xPosition, yPosition);
+                    ctx.shadowBlur = 0;
+
+                    if (yPosition > window.innerHeight && Math.random() > 0.98) {
+                        fallStreams[i] = 0;
+                    }
+                    fallStreams[i] += 0.85; // Organic slow fluid speed
+                }
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+    </script>
+</body>
+</html>
